@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emilbayes/cordova-plugin-android-downloadmanager.git"
+    "url": "git+https://github.com/swayangjit/cordova-plugin-android-downloadmanager.git"
   },
   "keywords": [
     "cordova",
