@@ -51,6 +51,10 @@ DownloadManager.prototype.addCompletedDownload = function(req, cb) {
   exec('addCompletedDownload', [req], cb)
 }
 
+DownloadManager.prototype.getSpeedLog = function(cb) {
+  exec('getSpeedLog', [], cb)
+}
+
 function exec (method, args, cb) {
   if (cb == null) cb = noop
   cordova.exec(onsuccess, onerror, 'DownloadManagerPlugin', method, args || [])
