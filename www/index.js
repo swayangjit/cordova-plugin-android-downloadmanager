@@ -51,8 +51,8 @@ DownloadManager.prototype.addCompletedDownload = function(req, cb) {
   exec('addCompletedDownload', [req], cb)
 }
 
-DownloadManager.prototype.getSpeedLog = function(cb) {
-  exec('getSpeedLog', [], cb)
+DownloadManager.prototype.fetchSpeedLog = function(cb) {
+  exec('fetchSpeedLog', [], cb)
 }
 
 function exec (method, args, cb) {

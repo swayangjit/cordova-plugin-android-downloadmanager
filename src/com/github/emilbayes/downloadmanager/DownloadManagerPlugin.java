@@ -99,7 +99,7 @@ public class DownloadManagerPlugin extends CordovaPlugin {
       if (action.equals("query")) return query(args.getJSONObject(0), callbackContext);
       if (action.equals("remove")) return remove(args, callbackContext);
       if (action.equals("addCompletedDownload")) return addCompletedDownload(args.getJSONObject(0), callbackContext);
-      if (action.equals("getSpeedLog")) return getSpeedLog(callbackContext);
+      if (action.equals("fetchSpeedLog")) return fetchSpeedLog(callbackContext);
 
       callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
       return false;
@@ -256,7 +256,7 @@ public class DownloadManagerPlugin extends CordovaPlugin {
         return longs;
     }
 
-    protected boolean getSpeedLog(CallbackContext callbackContext){
+    protected boolean fetchSpeedLog(CallbackContext callbackContext){
         Map<String, Object> speedLog = new HashMap<>();
         speedLog.put("distributionInKiloBytesPerSecond",rangeMap);
         long totalKBdownloaded = mTotalBytesDownloaded / 1024;
