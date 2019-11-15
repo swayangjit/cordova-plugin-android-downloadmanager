@@ -28,6 +28,13 @@ public class DownloadManagerPlugin extends CordovaPlugin {
     private long mLastTime = 0;
     private long mTotalBytesDownloaded = 0;
     private Map<Integer, Integer> rangeMap = new HashMap();
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            populateNetworkRange();
+            handler.postDelayed(this, 1000);
+        }
+    };
 
     @Override
     public void initialize(final CordovaInterface cordova, final CordovaWebView webView) {
@@ -43,24 +50,25 @@ public class DownloadManagerPlugin extends CordovaPlugin {
     }
 
     private void startFetchingDownloadSpeed() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                double speed = getNetworkSpeed();
-                if (speed > 0) {
-                    int key = speed < 1024 ? getFirstBucketKey(speed) : getSecondBucketKey(speed);
-                    int range = indexMap.get(key);
-                    if (rangeMap.containsKey(range)) {
-                        Integer rangeKey = rangeMap.get(range);
-                        rangeMap.put(range, rangeKey + 1);
-                    } else {
-                        rangeMap.put(range, 1);
-                    }
-                }
+        handler.postDelayed(runnable, 2000);
+    }
 
-                handler.postDelayed(this, 1000);
+    private void populateNetworkRange(){
+        try{
+            double speed = getNetworkSpeed();
+            if (speed > 0) {
+                int key = speed < 1024 ? getFirstBucketKey(speed) : getSecondBucketKey(speed);
+                int range = indexMap.get(key);
+                if (rangeMap.containsKey(range)) {
+                    Integer rangeKey = rangeMap.get(range)  ;
+                    rangeMap.put(range, rangeKey + 1);
+                } else {
+                    rangeMap.put(range, 1);
+                }
             }
-        }, 2000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public int getFirstBucketKey(double speed) {
@@ -308,6 +316,24 @@ public class DownloadManagerPlugin extends CordovaPlugin {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    @Override
+    public void onPause(boolean multitasking) {
+        super.onPause(multitasking);
+        if(handler != null){
+            handler.removeMessages(0);
+        }
+
+    }
+
+    @Override
+    public void onResume(boolean multitasking) {
+        super.onResume(multitasking);
+        if(handler != null && runnable != null){
+            handler.postDelayed(runnable, 1000);
+        }
+
     }
 
 }
